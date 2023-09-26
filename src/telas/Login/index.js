@@ -3,7 +3,7 @@ import { View, Image } from 'react-native';
 import Botao from '../../componentes/Botao';
 import { EntradaTexto } from '../../componentes/EntradaTexto';
 import estilos from './estilos';
-import { logarUsuario } from '../../servicos/requisivoesFirebase';
+import { logarUsuario } from '../../servicos/auth';
 import Alerta from '../../componentes/alerta';
 import { auth } from '../../config/firebase';
 import animacao from '../../../assets/animacao-carregando.gif';

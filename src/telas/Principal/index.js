@@ -1,17 +1,28 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, } from 'react-native';
 import Cabecalho from '../../componentes/Cabecalho';
 import Produto from '../../componentes/Produtos';
 import estilos from './estilos';
 import { auth } from '../../config/firebase';
-import { deslogarUsuario } from '../../servicos/requisivoesFirebase';
+import { deslogarUsuario } from '../../servicos/auth';
+import { BotaoProduto } from '../../componentes/botaoProduto';
+import { listarProdutos } from '../../servicos/firestore';
 
 export default function Principal({ navigation }) {
   const usuario = auth.currentUser;
+  const [produtos, setProdutos] = useState([]);
+
+  useEffect(() => {
+    async function carregarProdutos() {
+      let prods = await listarProdutos();
+      setProdutos(prods);
+    }
+    carregarProdutos();
+  }, [produtos]);
 
   async function deslogar() {
     await deslogarUsuario();
-    navigation.replace('Login')
+    navigation.navigate('Login')
   }
 
 
@@ -20,9 +31,18 @@ export default function Principal({ navigation }) {
       <Cabecalho logout={deslogar} />
       <Text style={estilos.texto}>Usuário: {usuario.email}</Text>
 
-      <Produto nome="Tênis" preco="200,00" />
-      <Produto nome="Camisa" preco="100,00" />
-      <Produto nome="Suplementos" preco="150,00" />
-     </View>
+      <FlatList
+        data={produtos}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <Produto nome={item.nome} preco={item.preco} />
+        )}
+
+      >
+
+      </FlatList>
+
+      <BotaoProduto onPress={() => navigation.navigate('DadosProduto')}></BotaoProduto>
+    </View>
   );
 }

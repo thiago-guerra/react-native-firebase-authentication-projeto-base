@@ -3,7 +3,7 @@ import { Alert, View } from 'react-native';
 import Botao from '../../componentes/Botao';
 import { EntradaTexto } from '../../componentes/EntradaTexto';
 import estilos from './estilos';
-import { cadastrarUsuario } from '../../servicos/requisivoesFirebase';
+import { cadastrarUsuario } from '../../servicos/auth';
 import Alerta from '../../componentes/alerta';
 import { alteraDados, verificaEntravaVazia } from '../../utils/comum';
 import { entradas } from './entradas';

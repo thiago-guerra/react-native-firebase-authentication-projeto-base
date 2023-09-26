@@ -10,6 +10,7 @@ import {
     APP_ID,
     MEASUREMENT_ID
 } from '@env';
+import { initializeFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: API_KEY,
@@ -18,7 +19,7 @@ const firebaseConfig = {
   storageBucket: STORAGE_BUCKET,
   messagingSenderId: MESSAGING_SENDER_ID,
   appId: APP_ID,
-  measurementId: MEASUREMENT_ID
+  measurementId: MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -26,3 +27,5 @@ const app = initializeApp(firebaseConfig);
 export const auth = initializeAuth(app, {
     persistence: getReactNativePersistence(AsyncStorage)
 });
+
+export const db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true, });
