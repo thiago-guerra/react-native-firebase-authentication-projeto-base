@@ -18,7 +18,8 @@ export async function listarProdutos() {
         let docSnapshot = await getDocs(prodsRef);
         let produtos = [];
         docSnapshot.forEach((data) =>{
-            produtos.push(data.data());
+            let produto = {id: data.id, ...data.data()};
+            produtos.push(produto);
         });
         return produtos;
     } catch (error) {

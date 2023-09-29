@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, } from 'react-native';
+import { View, Text, RefreshControl, ScrollView } from 'react-native';
 import Cabecalho from '../../componentes/Cabecalho';
 import Produto from '../../componentes/Produtos';
 import estilos from './estilos';
@@ -11,14 +11,18 @@ import { listarProdutos } from '../../servicos/firestore';
 export default function Principal({ navigation }) {
   const usuario = auth.currentUser;
   const [produtos, setProdutos] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function carregarProdutos() {
+    setRefreshing(true);
+    let prods = await listarProdutos();
+    setProdutos(prods);
+    setRefreshing(false);
+  }
 
   useEffect(() => {
-    async function carregarProdutos() {
-      let prods = await listarProdutos();
-      setProdutos(prods);
-    }
     carregarProdutos();
-  }, [produtos]);
+  }, []);
 
   async function deslogar() {
     await deslogarUsuario();
@@ -31,18 +35,26 @@ export default function Principal({ navigation }) {
       <Cabecalho logout={deslogar} />
       <Text style={estilos.texto}>Usuário: {usuario.email}</Text>
 
-      <FlatList
-        data={produtos}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <Produto nome={item.nome} preco={item.preco} />
-        )}
+      <ScrollView style={{ width: '100%' }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={carregarProdutos}
+          />
+        }>
 
-      >
-
-      </FlatList>
+      {
+        produtos?.map((produto) => {
+          return <Produto
+            nome={produto.nome}
+            preco={produto.preco}
+            key={produto.id}
+          />
+        })
+      }
+      </ScrollView>
 
       <BotaoProduto onPress={() => navigation.navigate('DadosProduto')}></BotaoProduto>
-    </View>
+    </View >
   );
 }
