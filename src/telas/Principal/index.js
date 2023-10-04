@@ -49,6 +49,7 @@ export default function Principal({ navigation }) {
             nome={produto.nome}
             preco={produto.preco}
             key={produto.id}
+            onTouchEndCapture={() => navigation.navigate('DadosProduto', { produto })}
           />
         })
       }
