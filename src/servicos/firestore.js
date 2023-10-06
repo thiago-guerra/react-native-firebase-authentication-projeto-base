@@ -1,5 +1,6 @@
 import { db } from "../config/firebase";
-import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc,
+query, onSnapshot } from 'firebase/firestore';
 
 export async function salvarProduto(data) {
     try {
@@ -51,4 +52,16 @@ export async function deletarProduto(id) {
         console.log(error);
         return 'erro';
     }
+}
+
+export async function listarProdutosTempoReal(setProdutos) {
+const ref = query(collection(db, "produtos"));
+ onSnapshot(ref, (querySnapshot) => {
+    let produtos = [];
+    querySnapshot.forEach((doc) => {
+        let produto = {id: doc.id, ...doc.data()};
+        produtos.push(produto);
+    });
+    setProdutos(produtos);
+});
 }

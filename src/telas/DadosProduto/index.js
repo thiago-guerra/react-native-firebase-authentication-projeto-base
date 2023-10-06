@@ -43,12 +43,23 @@ export default function DadosProduto({ navigation, route }) {
     }
 
     async function deletar() {
-        const result = await deletarProduto(route.params.produto.id);
-        if (result == 'erro') {
-            Alert.alert('Erro', 'Erro ao deletar o produto');
-        } else {
-            navigation.goBack();
-        }
+        Alert.alert('Deletar', 'Deseja realmente deletar o produto?', [
+            {
+                text: 'Cancelar',
+                style: 'cancel'
+            },
+            {
+                text: 'Ok',
+                onPress: async () => {
+                    const result = await deletarProduto(route.params.produto.id);
+                    if (result == 'erro') {
+                        Alert.alert('Erro', 'Erro ao deletar o produto');
+                    } else {
+                        navigation.goBack();
+                    }
+                }
+            }
+        ]);
     }
 
     return (
